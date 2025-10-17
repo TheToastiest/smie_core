@@ -9,6 +9,17 @@ pub enum SmieError {
     SystemTime(SystemTimeError),
     Other(String),
 }
+impl std::error::Error for SmieError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            SmieError::Redis(e)      => Some(e),
+            SmieError::Sqlite(e)     => Some(e),
+            SmieError::Io(e)         => Some(e),
+            SmieError::SystemTime(e) => Some(e),
+            SmieError::Other(_)      => None,
+        }
+    }
+}
 
 impl From<redis::RedisError> for SmieError {
     fn from(e: redis::RedisError) -> Self { SmieError::Redis(e) }
