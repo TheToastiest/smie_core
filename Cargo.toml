@@ -1,0 +1,51 @@
+[package]
+name = "smie_core"
+version = "0.1.0"
+edition = "2021"
+
+# smie_core/Cargo.toml
+
+[features]
+default = []
+ra = ["dep:raggedy_anndy"]
+
+[[bin]]
+name = "smie_ui"
+path = "src/smie_ui.rs"
+required-features = ["ra"]
+
+
+[lib]
+name = "smie_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "smie_test"
+path = "src/main.rs"
+
+[[bin]]
+name = "test_pipeline"
+path = "src/test_pipeline.rs"
+
+[dependencies]
+raggedy_anndy = { git = "https://github.com/TheToastiest/raggedy_anndy", optional = true, package = "raggedy_anndy" }
+
+anyhow = "1"
+
+
+parking_lot = "0.12"
+bincode = "1.3"
+lz4 = "1.28.1"
+redis = "0.32.4"
+regex = "1.11.1"
+rusqlite = { version = "0.30", features = ["bundled"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.142"
+zstd = "0.13.3"
+
+burn = { version = "0.18", default-features = false }
+burn-ndarray = "0.18.0"
+ndarray = "0.15"
+rfd = "0.13"
+eframe = "0.27"
+
