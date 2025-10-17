@@ -159,4 +159,17 @@ impl Smie {
     pub fn tombstone(&self, id: u64) -> anyhow::Result<()> { self.ann.tombstone(id) }
     pub fn save(&self, path: &str) -> anyhow::Result<()> { self.ann.save(path) }
     pub fn load(&self, path: &str) -> anyhow::Result<()> { self.ann.load(path) }
+    // recall using a precomputed embedding vector
+    pub fn recall_vec(
+        &self,
+        q: &[f32],
+        k: usize,
+        mask: u64,
+    ) -> anyhow::Result<Vec<(u64, f32, u64, String)>> {
+        if q.len() != self.dim {
+            anyhow::bail!("recall_vec: dim {} != index dim {}", q.len(), self.dim);
+        }
+        self.ann.search(q, k, mask)
+    }
+
 }
