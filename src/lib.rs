@@ -1,8 +1,6 @@
 pub mod redis_backend;
 pub mod sqlite_backend;
 pub mod embedding;
-pub mod ffi; 
-pub mod faiss;
 pub mod error;
 pub mod pipeline;
 pub use pipeline::{ingest, uriel_recall}; // <-- make them visible to binaries like smie_ui
@@ -13,7 +11,6 @@ use std::sync::Arc;
 use redis_backend::*;
 use sqlite_backend::*;
 use error::SmieError;
-use faiss::Index;
 mod ann;            pub use ann::{AnnEngine, Metric};
 #[cfg(feature="ra")]
 mod rag_ann;        #[cfg(feature="ra")]
@@ -50,23 +47,6 @@ pub fn flush_entry_to_sqlite(context: &str, data: &str, timestamp: Option<u64>) 
 pub fn recall_all_memory(context: &str) -> Result<Vec<String>, SmieError> {
     let entries = sqlite_backend::recall_all(context)?;
     Ok(entries.into_iter().map(|e| format!("{} | {}", e.timestamp, e.data)).collect())
-}
-
-pub fn search_faiss_index(index_path: &str, embedding: Vec<f32>, top_k: usize) -> Result<Vec<i64>, SmieError> {
-    let index = match Index::from_file(index_path) {
-        Ok(i) => i,
-        Err(_) => {
-            println!("⚠️ FAISS index not found. Creating a new one...");
-            let mut new_index = Index::new_flat_l2(embedding.len() as i32)
-                .map_err(|e| SmieError::Other(format!("Failed to create index: {}", e)))?;
-            new_index.save(index_path)?;
-            new_index
-        }
-    };
-
-    let labels = index.safe_search(&embedding, top_k)?;
-
-    Ok(labels)
 }
 
 
