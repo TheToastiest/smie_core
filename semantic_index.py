@@ -1,6 +1,5 @@
 import sqlite3
 import numpy as np
-import faiss
 
 def load_embeddings_into_faiss(db_path="semantic_memory.sqlite"):
     conn = sqlite3.connect(db_path)

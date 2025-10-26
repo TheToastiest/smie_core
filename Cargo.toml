@@ -23,9 +23,9 @@ path = "src/lib.rs"
 name = "smie_test"
 path = "src/main.rs"
 
-#[[bin]]
-#name = "test_pipeline"
-#path = "src/test_pipeline.rs"
+[[bin]]
+name = "test_pipeline"
+path = "src/test_pipeline.rs"
 
 [dependencies]
 raggedy_anndy = { git = "https://github.com/TheToastiest/raggedy_anndy", optional = true, package = "raggedy_anndy" }
